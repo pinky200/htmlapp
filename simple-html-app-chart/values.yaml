@@ -1,6 +1,6 @@
 # Image configuration
 image:
-  repository: "755583968331.dkr.ecr.ca-central-1.amazonaws.com/simple-html-app"  # ECR repository address
+  repository: "755583968331.dkr.ecr.ca-central-1.amazonaws.com/myapprepo"  # ECR repository address
   tag: github.run_id  # Tag for the image
   pullPolicy: IfNotPresent  # Image pull policy
 
