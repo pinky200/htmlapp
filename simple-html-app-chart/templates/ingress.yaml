@@ -4,9 +4,10 @@ metadata:
   name: {{ .Release.Name }}
   annotations:
     kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing  # لو عايز تكون ال ALB visible للإنترنت
 spec:
   rules:
-    - host: {{ .Values.ingress.host }}
+    - host: {{ .Values.ingress.host }}  # تأكد من وضع الـ hostname هنا
       http:
         paths:
           - path: /
@@ -16,5 +17,6 @@ spec:
                 name: {{ .Release.Name }}
                 port:
                   number: 80
+
 
 
