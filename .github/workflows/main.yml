@@ -34,8 +34,8 @@ jobs:
       run: |
         IMAGE_TAG=${{ github.run_id }}  # Generate the image tag based on the GitHub run ID
         docker build -t $ECR_REPO_NAME:$IMAGE_TAG .
-        docker tag $ECR_REPO_NAME:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPO_NAME:$IMAGE_TAG
-        docker push $ECR_REGISTRY/$ECR_REPO_NAME:$IMAGE_TAG
+        docker tag $ECR_REPO_NAME:$IMAGE_TAG $ECR_REGISTRY/myapprepo:$IMAGE_TAG
+        docker push $ECR_REGISTRY/myapprepo:$IMAGE_TAG
 
 
     - name: Update kubeconfig for EKS
