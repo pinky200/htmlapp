@@ -1,0 +1,59 @@
+name: CI/CD to EKS using Helm
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      AWS_REGION: ca-central-1
+      CLUSTER_NAME: yocluster
+      ECR_REGISTRY: 755583968331.dkr.ecr.ca-central-1.amazonaws.com
+      ECR_REPO_NAME: myapprepo
+      IMAGE_TAG: latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
+
+    - name: Login to Amazon ECR
+      run: |
+        aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REGISTRY
+
+    - name: Build and Push Docker image to ECR
+      run: |
+        docker build -t $ECR_REPO_NAME:$IMAGE_TAG .
+        docker tag $ECR_REPO_NAME:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPO_NAME:$IMAGE_TAG
+        docker push $ECR_REGISTRY/$ECR_REPO_NAME:$IMAGE_TAG
+
+    - name: Update kubeconfig for EKS
+      run: |
+        aws eks update-kubeconfig --region $AWS_REGION --name $CLUSTER_NAME
+
+    - name: Create or update ECR pull secret in Kubernetes
+      run: |
+        kubectl delete secret ecr-registry-secret --ignore-not-found || true
+        kubectl create secret docker-registry ecr-registry-secret \
+          --docker-server=$ECR_REGISTRY \
+          --docker-username=AWS \
+          --docker-password=$(aws ecr get-login-password --region $AWS_REGION) \
+          --docker-email=dev@example.com
+
+    - name: Deploy using Helm
+      run: |
+        helm upgrade --install myapp ./simple-html-app-chart \
+          --namespace default \
+          --set image.repository=$ECR_REGISTRY/$ECR_REPO_NAME \
+          --set image.tag=$IMAGE_TAG \
+          --set image.pullPolicy=IfNotPresent
