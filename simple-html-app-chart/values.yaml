@@ -1,7 +1,7 @@
 # Image configuration
 image:
   repository: "755583968331.dkr.ecr.ca-central-1.amazonaws.com/simple-html-app"  # ECR repository address
-  tag: build.buildid  # Tag for the image
+  tag: github.run_id  # Tag for the image
   pullPolicy: IfNotPresent  # Image pull policy
 
 # Kubernetes resources configuration
