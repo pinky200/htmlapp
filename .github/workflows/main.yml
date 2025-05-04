@@ -37,6 +37,7 @@ jobs:
         docker tag $ECR_REPO_NAME:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPO_NAME:$IMAGE_TAG
         docker push $ECR_REGISTRY/$ECR_REPO_NAME:$IMAGE_TAG
 
+
     - name: Update kubeconfig for EKS
       run: |
         aws eks update-kubeconfig --region $AWS_REGION --name $CLUSTER_NAME
@@ -58,4 +59,5 @@ jobs:
           --set image.repository=$ECR_REGISTRY/$ECR_REPO_NAME \
           --set image.tag=$IMAGE_TAG \
           --set image.pullPolicy=IfNotPresent
+        
 
