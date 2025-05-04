@@ -1,27 +1,20 @@
-{{- if .Values.ingress.enabled }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ .Release.Name }}-ingress
-  labels:
-    app: {{ .Release.Name }}
+  name: {{ .Release.Name }}
   annotations:
-    {{- range $key, $value := .Values.ingress.annotations }}
-    {{ $key }}: "{{ $value }}"
-    {{- end }}
+    kubernetes.io/ingress.class: alb
 spec:
   rules:
-    - host: {{ .Values.ingress.hosts[0].host }}
+    - host: {{ .Values.ingress.host }}
       http:
         paths:
-          {{- range .Values.ingress.hosts[0].paths }}
-          - path: {{ . }}
+          - path: /
             pathType: Prefix
             backend:
               service:
-                name: {{ $.Release.Name }}
+                name: {{ .Release.Name }}
                 port:
-                  number: {{ $.Values.service.port }}
-          {{- end }}
-{{- end }}
+                  number: 80
+
 
