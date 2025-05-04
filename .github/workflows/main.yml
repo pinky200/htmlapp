@@ -14,7 +14,6 @@ jobs:
       CLUSTER_NAME: yocluster
       ECR_REGISTRY: 755583968331.dkr.ecr.ca-central-1.amazonaws.com
       ECR_REPO_NAME: myapprepo
-      IMAGE_TAG: latest
 
     steps:
     - name: Checkout code
@@ -33,6 +32,7 @@ jobs:
 
     - name: Build and Push Docker image to ECR
       run: |
+        IMAGE_TAG=${{ github.run_id }}  # Generate the image tag based on the GitHub run ID
         docker build -t $ECR_REPO_NAME:$IMAGE_TAG .
         docker tag $ECR_REPO_NAME:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPO_NAME:$IMAGE_TAG
         docker push $ECR_REGISTRY/$ECR_REPO_NAME:$IMAGE_TAG
@@ -52,8 +52,10 @@ jobs:
 
     - name: Deploy using Helm
       run: |
+        IMAGE_TAG=${{ github.run_id }}  # Pass IMAGE_TAG to Helm
         helm upgrade --install myapp ./simple-html-app-chart \
           --namespace default \
           --set image.repository=$ECR_REGISTRY/$ECR_REPO_NAME \
           --set image.tag=$IMAGE_TAG \
           --set image.pullPolicy=IfNotPresent
+
