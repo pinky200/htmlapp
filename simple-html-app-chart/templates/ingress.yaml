@@ -4,10 +4,10 @@ metadata:
   name: {{ .Release.Name }}
   annotations:
     kubernetes.io/ingress.class: alb
-    alb.ingress.kubernetes.io/scheme: internet-facing  # لو عايز تكون ال ALB visible للإنترنت
+    alb.ingress.kubernetes.io/scheme: internet-facing  # Make ALB visible to the internet
 spec:
   rules:
-    - host: {{ .Values.ingress.host }}  # تأكد من وضع الـ hostname هنا
+    - host: {{ .Values.ingress.host }}  # Make sure this is set in values.yaml
       http:
         paths:
           - path: /

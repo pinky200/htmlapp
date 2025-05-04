@@ -22,7 +22,7 @@ ingress:
     alb.ingress.kubernetes.io/scheme: internet-facing  # Can be 'internal' if you want an internal ALB
     alb.ingress.kubernetes.io/target-type: ip
   hosts:
-    - host: "your-app.example.com"  # The domain name for the app
+    - host: "ab8c3dbd3fb3543c3b94c540961c2bfc-307887886.ca-central-1.elb.amazonaws.com"  # The domain name for the app
       paths:
         - "/"
 
