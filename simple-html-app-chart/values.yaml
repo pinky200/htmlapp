@@ -1,0 +1,41 @@
+# Image configuration
+image:
+  repository: "755583968331.dkr.ecr.ca-central-1.amazonaws.com/simple-html-app"  # ECR repository address
+  tag: latest  # Tag for the image
+  pullPolicy: IfNotPresent  # Image pull policy
+
+# Kubernetes resources configuration
+replicaCount: 1  # Number of pod replicas
+
+# Service configuration
+service:
+  type: ClusterIP  # Service type (ClusterIP, LoadBalancer, NodePort)
+  port: 80  # Service port
+  targetPort: 80  # Port exposed in the container
+
+# Ingress configuration for ALB
+ingress:
+  enabled: true  # Enable ingress
+  annotations:
+    # AWS ALB annotations
+    ingress.kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing  # Can be 'internal' if you want an internal ALB
+    alb.ingress.kubernetes.io/target-type: ip
+  hosts:
+    - host: "your-app.example.com"  # The domain name for the app
+      paths:
+        - "/"
+
+# Resources configuration (CPU, Memory)
+resources:
+  requests:
+    memory: "64Mi"
+    cpu: "250m"
+  limits:
+    memory: "128Mi"
+    cpu: "500m"
+
+# imagePullSecrets
+imagePullSecrets:
+  - name: ecr-registry-secret  # The secret created for ECR access
+
