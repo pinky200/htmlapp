@@ -60,4 +60,7 @@ jobs:
           --set image.tag=$IMAGE_TAG \
           --set image.pullPolicy=IfNotPresent
         
-
+    - name: Upload logs to S3
+      run: |
+        aws s3 cp ./path-to-your-logs/*.log s3://myekslogsbucket/logs/
+        continue-on-error: true  # Keep the workflow running even if this step fails   
