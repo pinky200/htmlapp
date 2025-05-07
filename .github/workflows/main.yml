@@ -60,6 +60,10 @@ jobs:
           --set image.tag=$IMAGE_TAG \
           --set image.pullPolicy=IfNotPresent
         
+    - name: Create logs directory
+      run: |
+        mkdir -p logs
+
     - name: Get logs from EKS and upload to S3
       run: |
         kubectl logs -l app=myapp -n default > logs/myapp-logs.log
