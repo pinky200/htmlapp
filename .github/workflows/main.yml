@@ -11,7 +11,7 @@ jobs:
 
     env:
       AWS_REGION: ca-central-1
-      CLUSTER_NAME: yocluster1
+      CLUSTER_NAME: yocluster0
       ECR_REGISTRY: 755583968331.dkr.ecr.ca-central-1.amazonaws.com
       ECR_REPO_NAME: myapprepo
 
