@@ -64,6 +64,11 @@ jobs:
       run: |
         mkdir -p logs
 
+    - name: Wait for pod to be Running
+      run: |
+        kubectl wait --for=condition=ready pod -l app=myapp -n default --timeout=300s
+
+
     - name: Get logs from EKS and upload to S3
       run: |
         kubectl logs -l app=myapp -n default > logs/myapp-logs.log
